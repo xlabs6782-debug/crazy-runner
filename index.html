@@ -1,79 +1,120 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Crazy Button Dodger!</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff5f6d, #ffc371);
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      overflow: hidden;
-      position: relative;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Crazy Button Dodger</title>
 
-    button {
-      position: absolute;
-      padding: 20px 40px;
-      font-size: 20px;
-      background-color: #00ffcc;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      user-select: none;
-    }
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: black;
+    font-family: monospace;
+    overflow: hidden;
+    touch-action: manipulation;
+    color: white;
+  }
 
-    h1 {
-      position: absolute;
-      top: 20px;
-      color: white;
-      text-shadow: 2px 2px black;
-    }
+  #info {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+  }
 
-    #score {
-      position: absolute;
-      top: 60px;
-      color: white;
-      font-size: 24px;
-      text-shadow: 2px 2px black;
-    }
-  </style>
+  #box {
+    width: 70px;
+    height: 70px;
+    background: red;
+    position: absolute;
+    border-radius: 10px;
+    box-shadow: 0 0 20px red;
+  }
+
+  #end {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: red;
+    font-size: 28px;
+    text-align: center;
+    padding-top: 40vh;
+  }
+</style>
 </head>
+
 <body>
-  <h1>Catch the Crazy Button!</h1>
-  <div id="score">Score: 0</div>
-  <button id="crazyButton">Click Me!</button>
 
-  <script>
-    const button = document.getElementById('crazyButton');
-    const scoreDisplay = document.getElementById('score');
-    let score = 0;
+<div id="info">Score: 0 | Time: 10</div>
+<div id="box"></div>
+<div id="end">YOU ALMOST WON 😏<br><br>Try Again</div>
 
-    function moveButton() {
-      const x = Math.random() * (window.innerWidth - button.offsetWidth);
-      const y = Math.random() * (window.innerHeight - button.offsetHeight);
-      button.style.left = x + 'px';
-      button.style.top = y + 'px';
+<script>
+  const box = document.getElementById("box");
+  const info = document.getElementById("info");
+  const end = document.getElementById("end");
+
+  let score = 0;
+  let time = 10;
+  let active = true;
+
+  function teleport() {
+    const x = Math.random() * (window.innerWidth - 70);
+    const y = Math.random() * (window.innerHeight - 100) + 50;
+    box.style.left = x + "px";
+    box.style.top = y + "px";
+    box.style.background = `hsl(${Math.random() * 360},100%,50%)`;
+  }
+
+  // TELEPORTS CONSTANTLY (UNFAIR)
+  setInterval(teleport, 120);
+
+  // MOVES AWAY WHEN YOU TRY TO TAP
+  box.addEventListener("touchstart", () => {
+    if (!active) return;
+
+    // 70% chance to punish player
+    if (Math.random() < 0.7) {
+      score--;
+    } else {
+      score++;
     }
 
-    button.addEventListener('mouseover', moveButton);
+    info.textContent = `Score: ${score} | Time: ${time}`;
 
-    button.addEventListener('click', () => {
-      score++;
-      scoreDisplay.textContent = 'Score: ' + score;
+    teleport();
+    if (navigator.vibrate) navigator.vibrate(30);
+  });
 
-      // Make button go extra crazy after certain scores
-      button.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
-      button.style.transform = `rotate(${Math.random() * 360}deg) scale(${1 + Math.random()})`;
-      moveButton();
-    });
+  // LYING TIMER
+  setInterval(() => {
+    if (!active) return;
 
-    // Make the button move randomly every 2 seconds for extra chaos
-    setInterval(moveButton, 2000);
-  </script>
+    time--;
+    if (time < 0) time = Math.floor(Math.random() * 3); // never reaches zero cleanly
+    info.textContent = `Score: ${score} | Time: ${time}`;
+  }, 1000);
+
+  // GAME ENDS NO MATTER WHAT
+  setTimeout(() => {
+    active = false;
+    box.style.display = "none";
+    end.style.display = "block";
+  }, 9000);
+
+  // FAKE RESTART
+  end.addEventListener("touchstart", () => {
+    end.innerHTML = "NOPE 😈<br>STILL IMPOSSIBLE";
+  });
+
+  teleport();
+</script>
+
 </body>
 </html>
+
+
