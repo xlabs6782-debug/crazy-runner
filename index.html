@@ -1,80 +1,69 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>No Points Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Points Card</title>
 
 <style>
   body {
     margin: 0;
     height: 100vh;
-    background: black;
-    font-family: monospace;
-    overflow: hidden;
-    touch-action: manipulation;
+    background: #0f2027;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+  }
+
+  .card {
+    width: 300px;
+    height: 180px;
+    background: #111;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.7);
     color: white;
+    padding: 20px;
+    position: relative;
   }
 
-  #message {
-    position: fixed;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
+  .title {
     font-size: 18px;
-    opacity: 0.8;
+    opacity: 0.7;
   }
 
-  #thing {
-    width: 70px;
-    height: 70px;
-    background: white;
+  .points {
+    font-size: 64px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .label {
+    text-align: center;
+    opacity: 0.6;
+    letter-spacing: 2px;
+  }
+
+  .lock {
     position: absolute;
-    border-radius: 12px;
-    box-shadow: 0 0 20px white;
+    bottom: 15px;
+    right: 20px;
+    font-size: 14px;
+    opacity: 0.5;
   }
 </style>
 </head>
 
 <body>
 
-<div id="message">Tap it. Nothing happens.</div>
-<div id="thing"></div>
-
-<script>
-  const thing = document.getElementById("thing");
-  const messages = [
-    "Nothing happened.",
-    "Still nothing.",
-    "Why are you tapping?",
-    "No points.",
-    "No win condition.",
-    "Stop trying.",
-    "This is the game.",
-    "There is no reward."
-  ];
-
-  function moveThing() {
-    thing.style.left = Math.random() * (window.innerWidth - 70) + "px";
-    thing.style.top = Math.random() * (window.innerHeight - 70) + "px";
-  }
-
-  thing.addEventListener("touchstart", () => {
-    moveThing();
-    document.getElementById("message").textContent =
-      messages[Math.floor(Math.random() * messages.length)];
-  });
-
-  thing.addEventListener("click", () => {
-    moveThing();
-    document.getElementById("message").textContent =
-      messages[Math.floor(Math.random() * messages.length)];
-  });
-
-  moveThing();
-</script>
+<div class="card">
+  <div class="title">POINTS CARD</div>
+  <div class="points">0</div>
+  <div class="label">TOTAL POINTS</div>
+  <div class="lock">🔒 Locked</div>
+</div>
 
 </body>
 </html>
-
