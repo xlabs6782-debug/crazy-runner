@@ -1,11 +1,10 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Crazy Button Dodger</title>
+<title>No Points Game</title>
 
 <style>
   body {
@@ -18,103 +17,64 @@
     color: white;
   }
 
-  #info {
+  #message {
     position: fixed;
-    top: 10px;
-    left: 10px;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 18px;
+    opacity: 0.8;
   }
 
-  #box {
+  #thing {
     width: 70px;
     height: 70px;
-    background: red;
+    background: white;
     position: absolute;
-    border-radius: 10px;
-    box-shadow: 0 0 20px red;
-  }
-
-  #end {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: black;
-    color: red;
-    font-size: 28px;
-    text-align: center;
-    padding-top: 40vh;
+    border-radius: 12px;
+    box-shadow: 0 0 20px white;
   }
 </style>
 </head>
 
 <body>
 
-<div id="info">Score: 0 | Time: 10</div>
-<div id="box"></div>
-<div id="end">YOU ALMOST WON 😏<br><br>Try Again</div>
+<div id="message">Tap it. Nothing happens.</div>
+<div id="thing"></div>
 
 <script>
-  const box = document.getElementById("box");
-  const info = document.getElementById("info");
-  const end = document.getElementById("end");
+  const thing = document.getElementById("thing");
+  const messages = [
+    "Nothing happened.",
+    "Still nothing.",
+    "Why are you tapping?",
+    "No points.",
+    "No win condition.",
+    "Stop trying.",
+    "This is the game.",
+    "There is no reward."
+  ];
 
-  let score = 0;
-  let time = 10;
-  let active = true;
-
-  function teleport() {
-    const x = Math.random() * (window.innerWidth - 70);
-    const y = Math.random() * (window.innerHeight - 100) + 50;
-    box.style.left = x + "px";
-    box.style.top = y + "px";
-    box.style.background = `hsl(${Math.random() * 360},100%,50%)`;
+  function moveThing() {
+    thing.style.left = Math.random() * (window.innerWidth - 70) + "px";
+    thing.style.top = Math.random() * (window.innerHeight - 70) + "px";
   }
 
-  // TELEPORTS CONSTANTLY (UNFAIR)
-  setInterval(teleport, 120);
-
-  // MOVES AWAY WHEN YOU TRY TO TAP
-  box.addEventListener("touchstart", () => {
-    if (!active) return;
-
-    // 70% chance to punish player
-    if (Math.random() < 0.7) {
-      score--;
-    } else {
-      score++;
-    }
-
-    info.textContent = `Score: ${score} | Time: ${time}`;
-
-    teleport();
-    if (navigator.vibrate) navigator.vibrate(30);
+  thing.addEventListener("touchstart", () => {
+    moveThing();
+    document.getElementById("message").textContent =
+      messages[Math.floor(Math.random() * messages.length)];
   });
 
-  // LYING TIMER
-  setInterval(() => {
-    if (!active) return;
-
-    time--;
-    if (time < 0) time = Math.floor(Math.random() * 3); // never reaches zero cleanly
-    info.textContent = `Score: ${score} | Time: ${time}`;
-  }, 1000);
-
-  // GAME ENDS NO MATTER WHAT
-  setTimeout(() => {
-    active = false;
-    box.style.display = "none";
-    end.style.display = "block";
-  }, 9000);
-
-  // FAKE RESTART
-  end.addEventListener("touchstart", () => {
-    end.innerHTML = "NOPE 😈<br>STILL IMPOSSIBLE";
+  thing.addEventListener("click", () => {
+    moveThing();
+    document.getElementById("message").textContent =
+      messages[Math.floor(Math.random() * messages.length)];
   });
 
-  teleport();
+  moveThing();
 </script>
 
 </body>
 </html>
-
 
